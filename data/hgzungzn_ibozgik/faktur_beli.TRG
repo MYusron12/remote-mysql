@@ -1,0 +1,8 @@
+TYPE=TRIGGERS
+triggers='CREATE DEFINER=`root`@`localhost` TRIGGER `x_faktur_beli_ins` AFTER INSERT ON `faktur_beli`\n FOR EACH ROW BEGIN\ninsert into jurnal (tgl_transaksi, kode_akun, uraian_transaksi, debet, ref_dok, no_ref_dok) values \n(NEW.tgl_faktur, NEW.kode_akun_debet, concat("Pembelian ", NEW.no_faktur) , NEW.tot_amount_idr ,"PI", NEW.no_faktur );\ninsert into jurnal (tgl_transaksi, kode_akun, uraian_transaksi, kredit, ref_dok, no_ref_dok) values \n(NEW.tgl_faktur, NEW.kode_akun_kredit, concat("Pembelian ", NEW.no_faktur) , NEW.tot_amount_idr ,"PI", NEW.no_faktur );\nEND' 'CREATE DEFINER=`root`@`localhost` TRIGGER `x_faktur_beli_upd` AFTER UPDATE ON `faktur_beli`\n FOR EACH ROW BEGIN\ndelete from jurnal where ref_dok = "PI" and no_ref_dok = OLD.no_faktur;\ninsert into jurnal (tgl_transaksi, kode_akun, uraian_transaksi, debet, ref_dok, no_ref_dok) values \n(NEW.tgl_faktur, NEW.kode_akun_debet, concat("Pembelian ", NEW.no_faktur) , NEW.tot_amount_idr ,"PI", NEW.no_faktur );\ninsert into jurnal (tgl_transaksi, kode_akun, uraian_transaksi, kredit, ref_dok, no_ref_dok) values \n(NEW.tgl_faktur, NEW.kode_akun_kredit, concat("Pembelian ", NEW.no_faktur) , NEW.tot_amount_idr ,"PI", NEW.no_faktur );\nEND' 'CREATE DEFINER=`root`@`localhost` TRIGGER `x_faktur_beli_del` AFTER DELETE ON `faktur_beli`\n FOR EACH ROW delete from jurnal where ref_dok = "PI" and no_ref_dok = OLD.no_faktur'
+sql_modes=524288 524288 524288
+definers='root@localhost' 'root@localhost' 'root@localhost'
+client_cs_names='utf8' 'utf8' 'utf8'
+connection_cl_names='utf8_general_ci' 'utf8_general_ci' 'utf8_general_ci'
+db_cl_names='latin1_swedish_ci' 'latin1_swedish_ci' 'latin1_swedish_ci'
+created=158385971576 158385971585 158385971597
